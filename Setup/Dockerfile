@@ -8,22 +8,35 @@ MAINTAINER ASAD MEMON, OSMAN ALI
 
 # Update the repository sources list
 RUN echo "deb http://archive.ubuntu.com/ubuntu trusty main universe" > /etc/apt/sources.list
+#Attempt to silence TERM READLINE FRONTEND messages.
+RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+#Begin installations
 RUN apt-get update
-#RUN apt-get upgrade
+RUN apt-get upgrade
+RUN apt-get install -y apt-utils
 #Install all the languages/compilers we are supporting.
 RUN apt-get install -y gcc
 RUN apt-get install -y g++
 RUN apt-get install -y php5-cli
 RUN apt-get install -y ruby
 RUN apt-get install -y python
+RUN dpkg-divert --local --rename --add /sbin/initctl
+RUN ln -s /bin/true /sbin/initctl
+RUN apt-get install -y asp.net-examples
 RUN apt-get install -y mono-xsp2 mono-xsp2-base
 
 RUN apt-get install -y mono-vbnc
-RUN apt-get install -y npm
+#RUN apt-get install -y npm
 RUN apt-get install -y golang-go	
+#RUN apt-get install -y nodejs
+RUN apt-get install -y curl
+RUN apt-get install -y build-essential
+RUN apt-get install -y npm
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
 RUN apt-get install -y nodejs
+RUN npm config set strict-ssl false
 
-RUN npm install -g underscore request express jade shelljs passport http sys jquery lodash async mocha moment connect validator restify ejs ws co when helmet wrench brain mustache should backbone forever  debug && export NODE_PATH=/usr/local/lib/node_modules/
+RUN npm_config_user=root npm install -g underscore request express jade shelljs passport http sys jquery lodash async mocha moment connect validator restify ejs ws co when helmet wrench brain mustache should backbone forever  debug && export NODE_PATH=/usr/local/lib/node_modules/
 
 RUN apt-get install -y clojure1.4
 
